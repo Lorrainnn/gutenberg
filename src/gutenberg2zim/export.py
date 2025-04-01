@@ -284,7 +284,7 @@ def html_content_for(book: Book, src_dir):
 
     # is HTML file present?
     if not html_fpath.exists():
-        logger.warn(f"Missing HTML content for #{book.id} at {html_fpath}")
+        logger.warn(f"Missing HTML content for #{book.book_id} at {html_fpath}")
         return None, None
 
     try:
@@ -621,7 +621,7 @@ def handle_unoptimized_files(
         if not list(unoptimized_dir.iterdir()):
             unoptimized_dir.rmdir()
 
-    logger.info(f"\tExporting Book #{book.id}.")
+    logger.info(f"\tExporting Book #{book.book_id}.")
 
     # actual book content, as HTML
     html, _ = html_content_for(book=book, src_dir=src_dir)
@@ -720,10 +720,10 @@ def handle_unoptimized_files(
         # delete {id}/cover.jpg if exist and update {id}/content.opf
         if remove_cover:
             # remove cover
-            (tmpd / text_type(book.id) / "cover.jpg").unlink(missing_ok=True)
+            (tmpd / text_type(book.book_id) / "cover.jpg").unlink(missing_ok=True)
 
             soup = None
-            opff = tmpd / text_type(book.id) / "content.opf"
+            opff = tmpd / text_type(book.book_id) / "content.opf"
             if opff.exists():
                 opff_content, _ = read_file(opff)
                 soup = BeautifulSoup(opff_content, "lxml-xml")
@@ -764,12 +764,12 @@ def handle_unoptimized_files(
             logger.info(f"\tCopying and optimizing image companion {fname}")
             optimize_image(src, dst)
             Global.add_item_for(path=dstfname, fpath=dst)
-            if dst.name == (f"{book.id}_cover_image.jpg"):
+            if dst.name == (f"{book.book_id}_cover_image.jpg"):
                 if s3_storage:
                     upload_to_cache(
                         asset=dst,
                         book_format="cover",
-                        book_id=book.id,
+                        book_id=book.book_id,
                         etag=book.cover_etag,
                         s3_storage=s3_storage,
                         optimizer_version=optimizer_version,
@@ -803,7 +803,7 @@ def handle_unoptimized_files(
                     upload_to_cache(
                         asset=dst,
                         book_format="epub",
-                        book_id=book.id,
+                        book_id=book.book_id,
                         etag=book.epub_etag,
                         s3_storage=s3_storage,
                         optimizer_version=optimizer_version,
@@ -823,7 +823,7 @@ def handle_unoptimized_files(
 
     # associated files (images, etc)
     for fpath in src_dir.iterdir():
-        if fpath.is_file() and fpath.name.startswith(f"{book.id}_"):
+        if fpath.is_file() and fpath.name.startswith(f"{book.book_id}_"):
             if fpath.suffix in (".html", ".htm"):
                 src = fpath
                 dst = TMP_FOLDER_PATH / fpath.name
@@ -857,7 +857,7 @@ def handle_unoptimized_files(
             asset=html_book_optimized_files,
             book_format="html",
             etag=book.html_etag,
-            book_id=book.id,
+            book_id=book.book_id,
             s3_storage=s3_storage,
             optimizer_version=optimizer_version,
         )

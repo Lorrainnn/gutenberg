@@ -28,15 +28,15 @@ def book_name_for_fs(book: Book) -> str:
 def article_name_for(book: Book, *, cover: bool = False) -> str:
     cover_suffix = "_cover" if cover else ""
     title = book_name_for_fs(book)
-    return f"{title}{cover_suffix}.{book.id}.html"
+    return f"{title}{cover_suffix}.{book.book_id}.html"
 
 
 def archive_name_for(book: Book, book_format: str) -> str:
-    return f"{book_name_for_fs(book)}.{book.id}.{book_format}"
+    return f"{book_name_for_fs(book)}.{book.book_id}.{book_format}"
 
 
 def fname_for(book: Book, book_format: str) -> str:
-    return f"{book.id}.{book_format}"
+    return f"{book.book_id}.{book_format}"
 
 
 def get_etag_from_url(url: str) -> str | None:
@@ -105,7 +105,7 @@ def get_list_of_filtered_books(languages, formats, only_books):
         )
 
     if len(only_books):
-        qs = qs.where(Book.id << only_books)
+        qs = qs.where(Book.book_id << only_books)
 
     if len(languages) and languages[0] != "mul":
         qs = qs.where(Book.language << languages)

@@ -32,7 +32,7 @@ class Global:
             Global.progress += 1
 
     @staticmethod
-    def setup(filename, language, title, description, name, publisher):
+    def setup(filename, language, title, description, long_description, name, publisher):
         Global.creator = Creator(
             filename=filename,
             main_path="Home.html",
@@ -40,6 +40,7 @@ class Global:
             workaround_nocancel=False,
             title=title,
             description=description,
+            long_description=long_description,
             creator="gutenberg.org",  # type: ignore
             publisher=publisher,  # type: ignore
             name=name,

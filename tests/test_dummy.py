@@ -5,3 +5,5 @@ from gutenberg2zim.constants import TMP_FOLDER
 # to be removed once a real test is added
 def test_dummy():
     assert TMP_FOLDER == "tmp"
+
+

@@ -33,7 +33,6 @@ IMAGE_BASE = "http://aleph.pglaf.org/cache/epub/"
 
 DL_CHUNCK_SIZE = 8192
 
-
 def resource_exists(url):
     try:
         r = requests.get(url, stream=True, timeout=20)  # in seconds
@@ -94,14 +93,14 @@ def handle_zipped_html(zippath: Path, book: Book, dst_dir: Path) -> bool:
 
             if fname.endswith(".html") or fname.endswith(".htm"):
                 if mhtml:
-                    if fname.startswith(f"{book.id}-h."):
-                        dst = dst_dir / f"{book.id}.html"
+                    if fname.startswith(f"{book.book_id}-h."):
+                        dst = dst_dir / f"{book.book_id}.html"
                     else:
-                        dst = dst_dir / f"{book.id}_{fname}"
+                        dst = dst_dir / f"{book.book_id}_{fname}"
                 else:
-                    dst = dst_dir / f"{book.id}.html"
+                    dst = dst_dir / f"{book.book_id}.html"
             else:
-                dst = dst_dir / f"{book.id}_{fname}"
+                dst = dst_dir / f"{book.book_id}_{fname}"
             dst = dst.resolve()
             try:
                 logger.debug(f"Moving from {src} to {dst}")
@@ -125,7 +124,7 @@ def download_book(
     s3_storage: KiwixStorage | None,
     optimizer_version: dict[str, str] | None,
 ):
-    logger.info(f"\tDownloading content files for Book #{book.id}")
+    logger.info(f"\tDownloading content files for Book #{book.book_id}")
 
     # apply filters
     if not formats:
@@ -135,7 +134,7 @@ def download_book(
     if "html" not in formats:
         formats.append("html")
 
-    book_dir = download_cache / str(book.id)
+    book_dir = download_cache / str(book.book_id)
     optimized_dir = book_dir / "optimized"
     unoptimized_dir = book_dir / "unoptimized"
 
@@ -152,7 +151,7 @@ def download_book(
         # if we already know (e.g. due to a former pass) that this book format is not
         # supported, no need to retry
         if book.unsupported_formats and book_format in book.unsupported_formats:
-            logger.debug(f"\t\tNo file available for {book_format} of #{book.id}")
+            logger.debug(f"\t\tNo file available for {book_format} of #{book.book_id}")
             continue
 
         unoptimized_fpath = unoptimized_dir / fname_for(book, book_format)
@@ -161,7 +160,7 @@ def download_book(
         # check if already downloaded
         if (unoptimized_fpath.exists() or optimized_fpath.exists()) and not force:
             logger.debug(
-                f"\t\t{book_format} already exists for book #{book.id}, "
+                f"\t\t{book_format} already exists for book #{book.book_id}, "
                 "reusing existing file"
             )
             continue
@@ -170,11 +169,11 @@ def download_book(
         pg_resp = None
         url = None
         for pg_type in PG_PREFERRED_TYPES[book_format]:
-            url = url_for_type(pg_type, book.id)
+            url = url_for_type(pg_type, book.book_id)
             if not url:
                 # not supposed to happen, this is a bug
                 raise Exception(
-                    f"Unsupported {pg_type} pg_type for {book_format} of #{book.id}"
+                    f"Unsupported {pg_type} pg_type for {book_format} of #{book.book_id}"
                 )
 
             pg_resp = requests.get(url, stream=True, timeout=20)  # in seconds
@@ -186,14 +185,14 @@ def download_book(
             pg_resp.close()
 
         if not url or not pg_type_to_use:
-            logger.debug(f"\t\tNo file available for {book_format} of #{book.id}")
+            logger.debug(f"\t\tNo file available for {book_format} of #{book.book_id}")
             unsupported_formats.append(book_format)
             continue
 
         if not pg_resp:
             # not supposed to happen, this is a bug
             raise Exception(
-                f"Missing streamed response for {book_format} of #{book.id}"
+                f"Missing streamed response for {book_format} of #{book.book_id}"
             )
 
         etag = pg_resp.headers.get("Etag", None)
@@ -228,9 +227,9 @@ def download_book(
 
         # save etag for optimized formats
         if book_format == "html":
-            book.html_etag = etag  # type: ignore
+            book.html_etag = etag  
         elif book_format == "epub":
-            book.epub_etag = etag  # type: ignore
+            book.epub_etag = etag 
 
     # update list of unsupported formats based on the union of format already known to
     # not be supported and new ones
@@ -249,7 +248,7 @@ def download_book(
     # delete book from DB if not downloaded in any format
     if len(unsupported_formats) == len(formats):
         logger.warning(
-            f"\t\tBook #{book.id} could not be downloaded in any format. "
+            f"\t\tBook #{book.book_id} could not be downloaded in any format. "
             "Deleting from DB ..."
         )
         book.delete_instance()
@@ -260,7 +259,7 @@ def download_book(
 
 
 def download_cover(book, book_dir, s3_storage, optimizer_version):
-    has_cover = Book.select(Book.cover_page).where(Book.id == book.id)
+    has_cover = Book.select(Book.cover_page).where(Book.book_id == book.book_id)
     if has_cover:
         # try to download optimized cover from cache if s3_storage
         url = f"{IMAGE_BASE}{book.id}/pg{book.id}.cover.medium.jpg"
@@ -290,7 +289,7 @@ def download_cover(book, book_dir, s3_storage, optimizer_version):
                 book.cover_etag = etag
                 book.save()
     else:
-        logger.debug(f"No Book Cover found for Book #{book.id}")
+        logger.debug(f"No Book Cover found for Book #{book.book_id}")
 
 
 def download_all_books(

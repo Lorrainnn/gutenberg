@@ -129,6 +129,9 @@ class Book(BaseModel):
     bookshelf = CharField(max_length=500, null=True)
     cover_page = IntegerField(default=0)
     popularity = 0
+
+    html_etag: Optional[str]
+    epub_etag: Optional[str]
     html_etag = CharField(max_length=500, null=True)
     epub_etag = CharField(max_length=500, null=True)
     cover_etag = CharField(max_length=500, null=True)

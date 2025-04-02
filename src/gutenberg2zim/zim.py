@@ -25,6 +25,7 @@ def build_zimfile(
     zim_name: str | None,
     title: str | None,
     description: str | None,
+    long_description: str | None,
     stats_filename: str | None,
     publisher: str,
     *,
@@ -61,6 +62,8 @@ def build_zimfile(
         f'All books in "{iso_languages[0]}" language '
         "from the first producer of free Ebooks",
     )
+    print(description)
+    print(long_description)
 
     logger.info(f"\tWritting ZIM for {title}")
 
@@ -84,6 +87,7 @@ def build_zimfile(
         language=",".join(iso_languages),
         title=title,
         description=description,
+        long_description=long_description,
         name=project_id,
         publisher=publisher,
     )

@@ -4,6 +4,8 @@ from pathlib import Path
 
 from docopt import docopt
 
+from zimscraperlib.inputs import compute_descriptions
+
 from gutenberg2zim.checkdeps import check_dependencies
 from gutenberg2zim.constants import TMP_FOLDER_PATH, VERSION, logger
 from gutenberg2zim.database import setup_database
@@ -17,7 +19,7 @@ help_info = (
     """Usage: gutenberg2zim [-y] [-F] [-l LANGS] [-f FORMATS] """
     """[-d CACHE_PATH] [-e STATIC_PATH] """
     """[-z ZIM_PATH] [-u RDF_URL] [-b BOOKS] """
-    """[-t ZIM_TITLE] [-n ZIM_DESC] """
+    """[-t ZIM_TITLE] [-n ZIM_DESC] [-ln ZIM_LONG_DESC]"""
     """[-c CONCURRENCY] [--dlc CONCURRENCY] [--no-index] """
     """[--prepare] [--parse] [--download] [--export] [--dev] """
     """[--zim] [--complete] [-m ONE_LANG_ONE_ZIM_FOLDER] """
@@ -38,7 +40,9 @@ help_info = (
 -e --static-folder=<folder>     Use-as/Write-to this folder static HTML
 -z --zim-file=<file>            Write ZIM into this file path
 -t --zim-title=<title>          Set ZIM title
--n --zim-desc=<description>     Set ZIM description
+-n --zim-desc=<description>         Set ZIM description 
+-ln --zim-long-desc=<description>   Set ZIM long description
+
 -d --dl-folder=<folder>         Folder to use/write-to downloaded ebooks
 -u --rdf-url=<url>              Alternative rdf-files.tar.bz2 URL
 -b --books=<ids>                Execute the processes for specific books, """
@@ -101,7 +105,11 @@ def main():
 
     books_csv = arguments.get("--books") or ""
     zim_title = arguments.get("--zim-title")
+
     zim_desc = arguments.get("--zim-desc")
+    zim_long_description = arguments.get("--zim-long-desc")
+
+
     concurrency = int(arguments.get("--concurrency") or 16)
     dl_concurrency = int(arguments.get("--dlc") or concurrency)
     force = arguments.get("--force", False)
@@ -222,6 +230,12 @@ def main():
     for zim_lang in zims:
         if do_zim:
             logger.info("BUILDING ZIM dynamically")
+            description, long_description = compute_descriptions(
+                "", 
+                zim_desc,
+                zim_long_description,
+            )
+
             build_zimfile(
                 output_folder=(
                     Path(one_lang_one_zim_folder).resolve()
@@ -237,10 +251,12 @@ def main():
                 optimizer_version=optimizer_version,
                 zim_name=Path(zim_name).name if zim_name else None,
                 title=zim_title,
-                description=zim_desc,
+                description=description,
+                long_description=long_description,
                 stats_filename=stats_filename,
                 publisher=publisher,
                 force=force,
                 title_search=title_search,
                 add_bookshelves=bookshelves,
             )
+

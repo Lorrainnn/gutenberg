@@ -5,6 +5,7 @@ from datetime import date
 from zimscraperlib.zim.creator import Creator
 
 from gutenberg2zim.constants import VERSION, logger
+from zimscraperlib.zim.metadata import StandardMetadataList
 
 
 class Global:
@@ -36,18 +37,22 @@ class Global:
         Global.creator = Creator(
             filename=filename,
             main_path="Home.html",
-            language=language,
             workaround_nocancel=False,
-            title=title,
-            description=description,
-            long_description=long_description,
-            creator="gutenberg.org",  # type: ignore
-            publisher=publisher,  # type: ignore
-            name=name,
-            tags="_category:gutenberg;gutenberg",  # type: ignore
-            scraper=f"gutenberg2zim-{VERSION}",  # type: ignore
-            date=date.today(),  # type: ignore
+        ).config_metadata(
+            std_metadata=StandardMetadataList(
+                Title=title,
+                Description=description,
+                Long_description=long_description,
+                Creator="gutenberg.org",
+                Publisher=publisher,
+                Name=name,
+                Language=language,
+                Tags="_category:gutenberg;gutenberg",
+                Scraper=f"gutenberg2zim-{VERSION}",
+                Date=date.today(),
+            )
         ).config_verbose(True)
+
 
     @staticmethod
     def add_item_for(

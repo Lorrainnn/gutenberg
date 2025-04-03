@@ -19,7 +19,7 @@ help_info = (
     """Usage: gutenberg2zim [-y] [-F] [-l LANGS] [-f FORMATS] """
     """[-d CACHE_PATH] [-e STATIC_PATH] """
     """[-z ZIM_PATH] [-u RDF_URL] [-b BOOKS] """
-    """[-t ZIM_TITLE] [-n ZIM_DESC] [-ln ZIM_LONG_DESC]"""
+    """[-t ZIM_TITLE] [-n ZIM_DESC] [-L ZIM_LONG_DESC]"""
     """[-c CONCURRENCY] [--dlc CONCURRENCY] [--no-index] """
     """[--prepare] [--parse] [--download] [--export] [--dev] """
     """[--zim] [--complete] [-m ONE_LANG_ONE_ZIM_FOLDER] """
@@ -41,7 +41,7 @@ help_info = (
 -z --zim-file=<file>            Write ZIM into this file path
 -t --zim-title=<title>          Set ZIM title
 -n --zim-desc=<description>         Set ZIM description 
--ln --zim-long-desc=<description>   Set ZIM long description
+-L --zim-long-desc=<description>   Set ZIM long description
 
 -d --dl-folder=<folder>         Folder to use/write-to downloaded ebooks
 -u --rdf-url=<url>              Alternative rdf-files.tar.bz2 URL

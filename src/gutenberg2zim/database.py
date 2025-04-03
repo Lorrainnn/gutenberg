@@ -97,7 +97,7 @@ class Author(BaseModel):
     def to_dict(self):
         return {
             "label": self.name(),
-            "id": self.gut_id,
+            "book_id": self.gut_id,
             "last_name": self.last_name,
             "first_names": self.first_names,
             "birth_year": self.birth_year,
@@ -130,8 +130,6 @@ class Book(BaseModel):
     cover_page = IntegerField(default=0)
     popularity = 0
 
-    html_etag: Optional[str]
-    epub_etag: Optional[str]
     html_etag = CharField(max_length=500, null=True)
     epub_etag = CharField(max_length=500, null=True)
     cover_etag = CharField(max_length=500, null=True)

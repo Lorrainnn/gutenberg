@@ -5,7 +5,19 @@ from datetime import date
 from zimscraperlib.zim.creator import Creator
 
 from gutenberg2zim.constants import VERSION, logger
-from zimscraperlib.zim.metadata import StandardMetadataList
+from zimscraperlib.zim.metadata import (
+    StandardMetadataList,
+    TitleMetadata,
+    DescriptionMetadata,
+    LongDescriptionMetadata,
+    CreatorMetadata,
+    PublisherMetadata,
+    NameMetadata,
+    LanguageMetadata,
+    TagsMetadata,
+    ScraperMetadata,
+    DateMetadata,
+)
 
 
 class Global:
@@ -40,16 +52,16 @@ class Global:
             workaround_nocancel=False,
         ).config_metadata(
             std_metadata=StandardMetadataList(
-                Title=title,
-                Description=description,
-                Long_description=long_description,
-                Creator="gutenberg.org",
-                Publisher=publisher,
-                Name=name,
-                Language=language,
-                Tags="_category:gutenberg;gutenberg",
-                Scraper=f"gutenberg2zim-{VERSION}",
-                Date=date.today(),
+                title=TitleMetadata(title),
+                description=DescriptionMetadata(description),
+                long_description=LongDescriptionMetadata(long_description),
+                creator=CreatorMetadata("gutenberg.org"),
+                publisher=PublisherMetadata(publisher),
+                name=NameMetadata(name),
+                language=LanguageMetadata([language]),
+                tags=TagsMetadata("_category:gutenberg;gutenberg"),
+                scraper=ScraperMetadata(f"gutenberg2zim-{VERSION}"),
+                date=DateMetadata(date.today()),
             )
         ).config_verbose(True)
 

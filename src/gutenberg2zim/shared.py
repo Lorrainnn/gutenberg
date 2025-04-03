@@ -4,7 +4,7 @@ from datetime import date
 
 from zimscraperlib.zim.creator import Creator
 
-from gutenberg2zim.constants import VERSION, logger
+from gutenberg2zim.constants import VERSION, logger, transparent_icon
 from zimscraperlib.zim.metadata import (
     StandardMetadataList,
     TitleMetadata,
@@ -17,6 +17,7 @@ from zimscraperlib.zim.metadata import (
     TagsMetadata,
     ScraperMetadata,
     DateMetadata,
+    DefaultIllustrationMetadata
 )
 
 
@@ -52,16 +53,17 @@ class Global:
             workaround_nocancel=False,
         ).config_metadata(
             std_metadata=StandardMetadataList(
-                title=TitleMetadata(title),
-                description=DescriptionMetadata(description),
-                long_description=LongDescriptionMetadata(long_description),
-                creator=CreatorMetadata("gutenberg.org"),
-                publisher=PublisherMetadata(publisher),
-                name=NameMetadata(name),
-                language=LanguageMetadata([language]),
-                tags=TagsMetadata("_category:gutenberg;gutenberg"),
-                scraper=ScraperMetadata(f"gutenberg2zim-{VERSION}"),
-                date=DateMetadata(date.today()),
+                Title=TitleMetadata(title),
+                Description=DescriptionMetadata(description),
+                LongDescription=LongDescriptionMetadata(long_description),
+                Creator=CreatorMetadata("gutenberg.org"),
+                Publisher=PublisherMetadata(publisher),
+                Name=NameMetadata(name),
+                Language=LanguageMetadata([language]),
+                Tags=TagsMetadata("_category:gutenberg;gutenberg"),
+                Scraper=ScraperMetadata(f"gutenberg2zim-{VERSION}"),
+                Date=DateMetadata(date.today()),
+                Illustration_48x48_at_1=DefaultIllustrationMetadata(transparent_icon),
             )
         ).config_verbose(True)
 
@@ -92,6 +94,8 @@ class Global:
                 should_compress=should_compress,
                 delete_fpath=delete_fpath,
             )
+       
+
 
     @staticmethod
     def add_illustration(illus_fpath, illus_size):

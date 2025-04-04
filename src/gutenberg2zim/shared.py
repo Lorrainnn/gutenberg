@@ -4,7 +4,7 @@ from datetime import date
 
 from zimscraperlib.zim.creator import Creator
 
-from gutenberg2zim.constants import VERSION, logger, transparent_icon
+from gutenberg2zim.constants import VERSION, logger, FAVICON_BYTES
 from zimscraperlib.zim.metadata import (
     StandardMetadataList,
     TitleMetadata,
@@ -55,7 +55,7 @@ class Global:
             std_metadata=StandardMetadataList(
                 Title=TitleMetadata(title),
                 Description=DescriptionMetadata(description),
-                LongDescription=LongDescriptionMetadata(long_description),
+                LongDescription=LongDescriptionMetadata(long_description) if long_description and long_description.strip() else None,
                 Creator=CreatorMetadata("gutenberg.org"),
                 Publisher=PublisherMetadata(publisher),
                 Name=NameMetadata(name),
@@ -63,7 +63,7 @@ class Global:
                 Tags=TagsMetadata("_category:gutenberg;gutenberg"),
                 Scraper=ScraperMetadata(f"gutenberg2zim-{VERSION}"),
                 Date=DateMetadata(date.today()),
-                Illustration_48x48_at_1=DefaultIllustrationMetadata(transparent_icon),
+                Illustration_48x48_at_1=DefaultIllustrationMetadata(FAVICON_BYTES),
             )
         ).config_verbose(True)
 

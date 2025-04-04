@@ -24,8 +24,8 @@ logger = getLogger(NAME, level=logging.INFO)
 TMP_FOLDER = "tmp"
 TMP_FOLDER_PATH = pathlib.Path(TMP_FOLDER).resolve()
 
-transparent_icon = base64.b64decode(
-        "iVBORw0KGgoAAAANSUhEUgAAADAAAAAwAQMAAABtzGvEAAAAGXRFWHRTb2Z0d2FyZQBB"
-        "ZG9iZSBJbWFnZVJlYWR5ccllPAAAAANQTFRFR3BMgvrS0gAAAAF0Uk5TAEDm2GYAAAAN"
-        "SURBVBjTY2AYBdQEAAFQAAGn4toWAAAAAElFTkSuQmCC"
-    )
+
+FAVICON_PATH = ROOT_DIR / "templates" / "favicon.png"
+with open(FAVICON_PATH, "rb") as f:
+    print("yesssssss")
+    FAVICON_BYTES = f.read()

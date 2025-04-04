@@ -22,13 +22,6 @@ from gutenberg2zim.iso639 import language_name
 from gutenberg2zim.l10n import l10n_strings
 from gutenberg2zim.s3 import upload_to_cache
 from gutenberg2zim.shared import Global
-
-
-from gutenberg2zim.shared import Global
-
-from gutenberg2zim.utils import article_name_for
-from gutenberg2zim.constants import TMP_FOLDER_PATH
-
 from gutenberg2zim.utils import (
     UTF8,
     archive_name_for,
@@ -207,7 +200,7 @@ def export_all_books(
         )
 
     # export illustation
-    # export_illustration()
+    #export_illustration()
 
     # export to JSON helpers
     export_to_json_helpers(
@@ -257,7 +250,7 @@ def export_all_books(
     def dlb(b):
         export_book(
             b,
-            book_dir=download_cache / str(b.id),
+            book_dir=download_cache / str(b.book_id),
             formats=formats,
             books=books,
             project_id=project_id,
@@ -514,14 +507,19 @@ def cover_html_content_for(
 ):
     cover_img = f"{book.book_id}_cover_image.jpg"
     cover_img = cover_img if (optimized_files_dir / cover_img).exists() else None
+
+    
     translate_author = (
         f' data-l10n-id="author-{book.author.name().lower()}"'
         if book.author.name() in ["Anonymous", "Various"]
         else ""
     )
+    from gutenberg2zim.database import License
+    license_obj = License.get_by_id(book.license_id)
+
     translate_license = (
-        f' data-l10n-id="license-{book.license_id.slug.lower()}"'
-        if book.license_id.slug in ["PD", "Copyright"]
+        f' data-l10n-id="license-{license_obj.slug.lower()}"'
+        if license_obj.slug in ["PD", "Copyright"]
         else ""
     )
     context = get_default_context(project_id=project_id, books=books)
@@ -596,17 +594,6 @@ def export_book(
         books=books,
         formats=formats,
     )
-    cover_path = optimized_files_dir / f"{book.title}_cover.{book.book_id}.html"
-    if cover_path.exists():
-        Global.add_item_for(
-            path=f"books/{book.book_id}.html",
-            fpath=cover_path,
-            title=str(book.title),
-            mimetype="text/html",
-            is_front=True,
-        )
-
-
 
 
 def handle_unoptimized_files(
@@ -911,11 +898,8 @@ def write_book_presentation_article(
     books,
     formats,
 ):
-
     article_name = article_name_for(book=book, cover=True)
     cover_fpath = TMP_FOLDER_PATH / article_name
-
-    # 如果不存在或 force，生成 HTML 内容
     if not cover_fpath.exists() or force:
         logger.info(f"\t\tExporting article presentation to {cover_fpath}")
         html = cover_html_content_for(
@@ -927,19 +911,12 @@ def write_book_presentation_article(
             add_bookshelves=add_bookshelves,
             formats=formats,
         )
-        with open(cover_fpath, "w", encoding="utf-8") as f:
+        with open(cover_fpath, "w") as f:
             f.write(html)
     else:
         logger.info(f"\t\tSkipping already optimized cover {cover_fpath}")
 
-    # ✅ 不管有没有重新生成，都添加进 ZIM
-    Global.add_item_for(
-        path=f"books/{book.book_id}.html",      # 建议使用规范化路径
-        fpath=cover_fpath,
-        title=str(book.title),             # 确保是 str，不是 CharField
-        is_front=True,
-        mimetype="text/html",
-    )
+    Global.add_item_for(path=article_name, fpath=cover_fpath)
 
 
 def authors_from_ids(idlist):

@@ -262,18 +262,18 @@ def download_cover(book, book_dir, s3_storage, optimizer_version):
     has_cover = Book.select(Book.cover_page).where(Book.book_id == book.book_id)
     if has_cover:
         # try to download optimized cover from cache if s3_storage
-        url = f"{IMAGE_BASE}{book.id}/pg{book.id}.cover.medium.jpg"
+        url = f"{IMAGE_BASE}{book.book_id}/pg{book.book_id}.cover.medium.jpg"
         etag = get_etag_from_url(url)
         downloaded_from_cache = False
-        cover = f"{book.id}_cover_image.jpg"
+        cover = f"{book.book_id}_cover_image.jpg"
         if (book_dir / "optimized" / cover).exists() or (
             book_dir / "unoptimized" / cover
         ).exists():
-            logger.debug(f"Cover already exists for book #{book.id}")
+            logger.debug(f"Cover already exists for book #{book.book_id}")
             return
         if s3_storage:
             logger.info(
-                f"Trying to download cover for {book.id} from optimization cache"
+                f"Trying to download cover for {book.book_id} from optimization cache"
             )
             downloaded_from_cache = download_from_cache(
                 book=book,

@@ -3,7 +3,6 @@ import sys
 from pathlib import Path
 
 from docopt import docopt
-
 from zimscraperlib.inputs import compute_descriptions
 
 from gutenberg2zim.checkdeps import check_dependencies
@@ -40,7 +39,7 @@ help_info = (
 -e --static-folder=<folder>     Use-as/Write-to this folder static HTML
 -z --zim-file=<file>            Write ZIM into this file path
 -t --zim-title=<title>          Set ZIM title
--n --zim-desc=<description>         Set ZIM description 
+-n --zim-desc=<description>         Set ZIM description
 -L --zim-long-desc=<description>   Set ZIM long description
 
 -d --dl-folder=<folder>         Folder to use/write-to downloaded ebooks
@@ -108,7 +107,6 @@ def main():
 
     zim_desc = arguments.get("--zim-desc")
     zim_long_description = arguments.get("--zim-long-desc")
-
 
     concurrency = int(arguments.get("--concurrency") or 16)
     dl_concurrency = int(arguments.get("--dlc") or concurrency)
@@ -231,7 +229,7 @@ def main():
         if do_zim:
             logger.info("BUILDING ZIM dynamically")
             description, long_description = compute_descriptions(
-                "", 
+                "",
                 zim_desc,
                 zim_long_description,
             )
@@ -259,4 +257,3 @@ def main():
                 title_search=title_search,
                 add_bookshelves=bookshelves,
             )
-

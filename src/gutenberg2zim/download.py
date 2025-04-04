@@ -33,6 +33,7 @@ IMAGE_BASE = "http://aleph.pglaf.org/cache/epub/"
 
 DL_CHUNCK_SIZE = 8192
 
+
 def resource_exists(url):
     try:
         r = requests.get(url, stream=True, timeout=20)  # in seconds
@@ -173,7 +174,7 @@ def download_book(
             if not url:
                 # not supposed to happen, this is a bug
                 raise Exception(
-                    f"Unsupported {pg_type} pg_type for {book_format} of #{book.book_id}"
+                    f"Unsupported {pg_type} pg_type for {book_format} #{book.book_id}"
                 )
 
             pg_resp = requests.get(url, stream=True, timeout=20)  # in seconds
@@ -227,9 +228,9 @@ def download_book(
 
         # save etag for optimized formats
         if book_format == "html":
-            book.html_etag = etag  
+            book.html_etag = etag  # type: ignore
         elif book_format == "epub":
-            book.epub_etag = etag 
+            book.epub_etag = etag  # type: ignore
 
     # update list of unsupported formats based on the union of format already known to
     # not be supported and new ones

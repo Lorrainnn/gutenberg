@@ -37,7 +37,7 @@ dynamic = ["version"]
 
 [project.optional-dependencies]
 scripts = ["invoke==2.2.0"]
-lint = ["black==23.7.0", "ruff==0.0.280"]
+lint = ["black==25.1.0", "ruff==0.11.3"]
 check = ["pyright==1.1.398"]
 test = ["pytest==7.4.0", "coverage==7.3.0"]
 dev = [
@@ -109,10 +109,10 @@ all = "inv checkall --args '{args}'"
 
 [tool.black]
 line-length = 88
-target-version = ['py313']
+target-version = ['py312']
 
 [tool.ruff]
-target-version = "py313"
+target-version = "py312"
 line-length = 88
 src = ["src"]
 select = [

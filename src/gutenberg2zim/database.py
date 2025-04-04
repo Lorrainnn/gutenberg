@@ -119,7 +119,7 @@ class Book(BaseModel):
     class Meta:
         database = db
 
-    book_id = IntegerField(primary_key=True)  
+    book_id = IntegerField(primary_key=True)
     title = CharField(max_length=500)
     subtitle = CharField(max_length=500, null=True)
     author = ForeignKeyField(Author, related_name="books")

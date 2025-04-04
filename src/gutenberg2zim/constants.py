@@ -1,6 +1,6 @@
 import logging
 import pathlib
-import base64
+
 from zimscraperlib.logging import getLogger
 
 from gutenberg2zim.__about__ import __version__
@@ -27,5 +27,4 @@ TMP_FOLDER_PATH = pathlib.Path(TMP_FOLDER).resolve()
 
 FAVICON_PATH = ROOT_DIR / "templates" / "favicon.png"
 with open(FAVICON_PATH, "rb") as f:
-    print("yesssssss")
     FAVICON_BYTES = f.read()

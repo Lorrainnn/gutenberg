@@ -75,7 +75,7 @@ def exec_cmd(cmd):
     else:
         args = cmd.split(" ")
     logger.debug(" ".join(args))
-    return subprocess.run(args).returncode
+    return subprocess.run(args, check=False).returncode
 
 
 def download_file(url: str, fpath: Path) -> bool:
@@ -133,7 +133,7 @@ def get_lang_groups(books):
     else:
         return (
             langs_wt_count[:NB_MAIN_LANGS],
-            sorted(langs_wt_count[NB_MAIN_LANGS:], key=lambda x: x[0]),
+            sorted(langs_wt_count[NB_MAIN_LANGS:], key=lambda x: x[0] or ""),
         )
 
 

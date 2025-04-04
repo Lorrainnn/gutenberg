@@ -200,7 +200,7 @@ def export_all_books(
         )
 
     # export illustation
-    #export_illustration()
+    # export_illustration()
 
     # export to JSON helpers
     export_to_json_helpers(
@@ -323,7 +323,9 @@ def update_html_for_static(book, html_content, formats, *, epub=False):
     if not epub:
         for img in soup.findAll("img"):
             if "src" in img.attrs:
-                img.attrs["src"] = img.attrs["src"].replace("images/", f"{book.book_id}_")
+                img.attrs["src"] = img.attrs["src"].replace(
+                    "images/", f"{book.book_id}_"
+                )
 
     # update all <a> links to internal HTML pages
     # should only apply to relative URLs to HTML files.
@@ -508,13 +510,13 @@ def cover_html_content_for(
     cover_img = f"{book.book_id}_cover_image.jpg"
     cover_img = cover_img if (optimized_files_dir / cover_img).exists() else None
 
-    
     translate_author = (
         f' data-l10n-id="author-{book.author.name().lower()}"'
         if book.author.name() in ["Anonymous", "Various"]
         else ""
     )
     from gutenberg2zim.database import License
+
     license_obj = License.get_by_id(book.license_id)
 
     translate_license = (
@@ -790,10 +792,7 @@ def handle_unoptimized_files(
             try:
                 optimize_epub(src, tmp_epub.name)
             except zipfile.BadZipFile:
-                logger.warn(
-                    "\t\tBad zip file. "
-                    "Copying as it might be working{}".format(fname)
-                )
+                logger.warn("\t\tBad zip file. Copying as it might be working{fname}")
                 handle_companion_file(
                     fname=fname,
                     dstfname=dstfname,
@@ -822,7 +821,7 @@ def handle_unoptimized_files(
             logger.info(f"\tCopying companion file from {src} to {dst}")
             copy_file(src, dst)
             Global.add_item_for(path=dstfname, fpath=dst)
-            if ext != ".pdf" and ext != ".zip" and html_file_list:
+            if ext not in {".pdf", ".zip"} and html_file_list:
                 html_file_list.append(dst)
                 update_download_cache(src, dst)
 

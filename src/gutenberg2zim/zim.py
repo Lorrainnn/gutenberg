@@ -56,14 +56,12 @@ def build_zimfile(
     title = title or metadata_translations.get(metadata_lang, {}).get(
         "title", "Project Gutenberg Library"
     )
-
+    # check if user has description input otherwise assign default description
     description = description or metadata_translations.get(metadata_lang, {}).get(
         "description",
         f'All books in "{iso_languages[0]}" language '
         "from the first producer of free Ebooks",
     )
-    print(description)
-    print(long_description)
 
     logger.info(f"\tWritting ZIM for {title}")
 
@@ -84,7 +82,7 @@ def build_zimfile(
 
     Global.setup(
         filename=zim_path,
-        language=",".join(iso_languages),
+        language=iso_languages,
         title=title,
         description=description,
         long_description=long_description,

@@ -11,7 +11,7 @@ storing content for offline usage.
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/gutenberg2zim.svg)](https://pypi.org/project/gutenberg2zim/)
 [![Docker](https://ghcr-badge.egpl.dev/openzim/gutenberg/latest_tag?label=docker)](https://ghcr.io/openzim/gutenberg)
 
-> [!WARNING]  
+> [!WARNING]
 > This scraper is now known to have a serious flaw. A critical bug https://github.com/openzim/gutenberg/issues/219 has been discovered which leads to incomplete archives. Work on https://github.com/openzim/gutenberg/issues/97 (complete rewrite of the scraper logic) now seems mandatory to fix these annoying problems. We however currently miss the necessary bandwidth to address these changes. Help is of course welcomed, but be warned this is going to be a significant project (at least 10 man.days to change the scraper logic so that we can fix the issue I would say, so probably the double since human is always bad at estimations).
 
 ## Getting Started
@@ -102,15 +102,15 @@ The setup is divided into two categories: one for simply running the scraper and
 
 **For Users Running the Scraper**:
 
-### GNU/Linux 
+### GNU/Linux
 ```
 sudo apt update && sudo apt install -y python3-pip p7zip-full zip zim-tools curl jpegoptim pngquant
 ```
-### Fedora 
+### Fedora
 ```
 sudo dnf install -y python3-pip jpegoptim pngquant p7zip curl zip zim-tools
 ```
-### Arch linux 
+### Arch linux
 ```
 sudo pacman -S python-pip libxml2 jpegoptim pngquant p7zip curl zip zim-tools
 ```
@@ -125,11 +125,11 @@ brew install jpegoptim pngquant p7zip curl zip zim-tools
 ```
 sudo apt update && sudo apt install -y python3-pip libxml2-dev libxslt-dev jpegoptim pngquant p7zip-full curl zip zim-tools
 ```
-### Fedora 
+### Fedora
 ```
 sudo dnf install -y python3-pip libxml2-devel libxslt-devel jpegoptim pngquant p7zip curl zip zim-tools
 ```
-### Arch linux 
+### Arch linux
 ```
 sudo pacman -S python-pip libxml2 libxslt jpegoptim pngquant p7zip curl zip zim-tools
 ```
